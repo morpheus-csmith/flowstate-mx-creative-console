@@ -1,0 +1,2110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FlowState — AI-Powered Workspace Controller | Logitech DevStudio 2026</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    :root {
+      --bg: #0f1117;
+      --card: #1a1d27;
+      --card-hover: #22262f;
+      --border: #2a2e3a;
+      --text: #ffffff;
+      --text-dim: #8b919e;
+      --accent: #6366f1;
+      --accent-glow: rgba(99, 102, 241, 0.3);
+      --green: #22c55e;
+      --orange: #f59e0b;
+      --red: #ef4444;
+      --blue: #3b82f6;
+      --purple: #a855f7;
+      --pink: #ec4899;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+    
+    /* Header */
+    .header {
+      background: rgba(15, 17, 23, 0.95);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 24px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(10px);
+    }
+    
+    .header-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .logo-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--accent), var(--purple));
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+    }
+    
+    .logo-text h1 {
+      font-size: 20px;
+      font-weight: 700;
+    }
+    
+    .logo-text p {
+      font-size: 11px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    .header-status {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    
+    .status-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      font-size: 12px;
+      transition: all 0.3s;
+    }
+    
+    .status-badge.connected {
+      background: rgba(34, 197, 94, 0.15);
+      border-color: rgba(34, 197, 94, 0.4);
+      color: var(--green);
+    }
+    
+    .status-badge.connected .status-dot {
+      background: var(--green);
+      box-shadow: 0 0 8px var(--green);
+    }
+    
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--text-dim);
+      transition: all 0.3s;
+    }
+    
+    .status-dot.pulse {
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(1.2); }
+    }
+    
+    /* Main Layout */
+    .main {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 24px;
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: 24px;
+    }
+    
+    /* Cards */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+    }
+    
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    
+    .card-title {
+      font-size: 14px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .card-badge {
+      font-size: 10px;
+      padding: 3px 8px;
+      background: var(--accent);
+      border-radius: 10px;
+      font-weight: 600;
+    }
+    
+    .card-badge.green {
+      background: var(--green);
+    }
+    
+    /* Welcome Section */
+    .welcome-section {
+      grid-column: 1 / -1;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(168, 85, 247, 0.1));
+      border: 1px solid rgba(99, 102, 241, 0.3);
+    }
+    
+    .welcome-content {
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+    }
+    
+    .welcome-icon {
+      font-size: 48px;
+      flex-shrink: 0;
+    }
+    
+    .welcome-text h2 {
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
+    
+    .welcome-text p {
+      color: var(--text-dim);
+      margin-bottom: 16px;
+    }
+    
+    .how-it-works {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+    
+    .how-step {
+      background: rgba(0,0,0,0.2);
+      padding: 12px;
+      border-radius: 10px;
+      text-align: center;
+    }
+    
+    .how-step .num {
+      width: 24px;
+      height: 24px;
+      background: var(--accent);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      margin: 0 auto 8px;
+    }
+    
+    .how-step .title {
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    
+    .how-step .desc {
+      font-size: 11px;
+      color: var(--text-dim);
+    }
+    
+    /* Left Column */
+    .left-column {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    
+    /* Current Context Display */
+    .context-display {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px;
+      background: rgba(0,0,0,0.3);
+      border-radius: 12px;
+      margin-bottom: 8px;
+    }
+    
+    .context-app {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .context-app-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      font-weight: 700;
+    }
+    
+    .context-app-info h3 {
+      font-size: 16px;
+      font-weight: 600;
+    }
+    
+    .context-app-info p {
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+    
+    .context-arrow {
+      font-size: 20px;
+      color: var(--text-dim);
+    }
+    
+    .context-task {
+      padding: 8px 16px;
+      background: var(--accent);
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    
+    /* Hardware Visualization */
+    .hardware-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    
+    /* MX Console */
+    .console-visual {
+      background: linear-gradient(145deg, #2a2d38, #1e2028);
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+      position: relative;
+    }
+    
+    .device-status {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 8px;
+      background: rgba(34, 197, 94, 0.2);
+      border-radius: 10px;
+      font-size: 9px;
+      color: var(--green);
+    }
+    
+    .device-status .dot {
+      width: 6px;
+      height: 6px;
+      background: var(--green);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    
+    .console-label {
+      font-size: 11px;
+      color: var(--text-dim);
+      text-align: center;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    .button-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    
+    .hw-button {
+      aspect-ratio: 1;
+      background: linear-gradient(145deg, #3a3d48, #252830);
+      border: 2px solid transparent;
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+    }
+    
+    .hw-button:hover {
+      transform: translateY(-2px);
+      background: linear-gradient(145deg, #454850, #303540);
+    }
+    
+    .hw-button.active {
+      border-color: var(--btn-color);
+      box-shadow: 0 0 20px var(--btn-glow);
+    }
+    
+    .hw-button .icon {
+      font-size: 18px;
+      margin-bottom: 2px;
+    }
+    
+    .hw-button .label {
+      font-size: 8px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+    }
+    
+    .hw-button.active .label {
+      color: var(--text);
+    }
+    
+    /* Dials */
+    .dial-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      padding-top: 8px;
+    }
+    
+    .dial-container {
+      text-align: center;
+    }
+    
+    .dial {
+      width: 64px;
+      height: 64px;
+      background: linear-gradient(145deg, #3a3d48, #252830);
+      border-radius: 50%;
+      border: 3px solid #454850;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: grab;
+      position: relative;
+      margin: 0 auto 8px;
+      transition: border-color 0.3s;
+    }
+    
+    .dial:active {
+      cursor: grabbing;
+      border-color: var(--accent);
+    }
+    
+    .dial::before {
+      content: '';
+      position: absolute;
+      top: 6px;
+      width: 4px;
+      height: 10px;
+      background: var(--accent);
+      border-radius: 2px;
+      transform-origin: center 26px;
+      transform: rotate(var(--rotation, 0deg));
+      transition: transform 0.1s;
+    }
+    
+    .dial-value {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--accent);
+    }
+    
+    .dial-label {
+      font-size: 9px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+    }
+    
+    /* Actions Ring */
+    .ring-visual {
+      background: linear-gradient(145deg, #2a2d38, #1e2028);
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+    
+    .ring-container {
+      position: relative;
+      width: 160px;
+      height: 160px;
+      margin: 8px 0;
+    }
+    
+    .ring-outer {
+      position: absolute;
+      inset: 0;
+      border: 4px solid #3a3d48;
+      border-radius: 50%;
+      background: linear-gradient(145deg, #252830, #1e2028);
+    }
+    
+    .ring-segment {
+      position: absolute;
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(145deg, #3a3d48, #252830);
+      border: 2px solid transparent;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 16px;
+    }
+    
+    .ring-segment:hover {
+      transform: scale(1.15);
+      z-index: 10;
+    }
+    
+    .ring-segment.active {
+      border-color: var(--seg-color);
+      box-shadow: 0 0 15px var(--seg-glow);
+    }
+    
+    .ring-segment:nth-child(1) { top: 0; left: 50%; transform: translateX(-50%); }
+    .ring-segment:nth-child(2) { top: 18px; right: 8px; }
+    .ring-segment:nth-child(3) { bottom: 18px; right: 8px; }
+    .ring-segment:nth-child(4) { bottom: 0; left: 50%; transform: translateX(-50%); }
+    .ring-segment:nth-child(5) { bottom: 18px; left: 8px; }
+    .ring-segment:nth-child(6) { top: 18px; left: 8px; }
+    
+    .ring-segment:nth-child(1):hover, .ring-segment:nth-child(4):hover { transform: translateX(-50%) scale(1.15); }
+    
+    .ring-center {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 50px;
+      height: 50px;
+      background: linear-gradient(145deg, #2a2d38, #1e2028);
+      border-radius: 50%;
+      border: 2px solid #454850;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .ring-center .mode-icon {
+      font-size: 18px;
+    }
+    
+    .ring-center .mode-text {
+      font-size: 7px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+    }
+    
+    /* AI Insights */
+    .ai-insights {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    
+    .insight {
+      padding: 14px;
+      background: rgba(0,0,0,0.2);
+      border-radius: 10px;
+      border-left: 3px solid var(--insight-color);
+    }
+    
+    .insight-label {
+      font-size: 10px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+    
+    .insight-value {
+      font-size: 13px;
+      font-weight: 500;
+    }
+    
+    .insight-meta {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 6px;
+      font-size: 11px;
+      color: var(--green);
+    }
+    
+    /* Right Column */
+    .right-column {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    
+    /* App Selector */
+    .app-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+    }
+    
+    .app-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px;
+      background: rgba(0,0,0,0.2);
+      border: 2px solid transparent;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .app-btn:hover {
+      background: rgba(255,255,255,0.05);
+      transform: translateY(-1px);
+    }
+    
+    .app-btn.active {
+      border-color: var(--app-color);
+      background: var(--app-bg);
+    }
+    
+    .app-btn .icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    
+    .app-btn .name {
+      font-size: 12px;
+      font-weight: 500;
+    }
+    
+    /* Task Selector */
+    .task-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    
+    .task-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px;
+      background: rgba(0,0,0,0.2);
+      border: 1px solid transparent;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .task-btn:hover {
+      background: rgba(255,255,255,0.05);
+    }
+    
+    .task-btn.active {
+      border-color: var(--accent);
+      background: rgba(99, 102, 241, 0.1);
+    }
+    
+    .task-btn .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--text-dim);
+      transition: all 0.3s;
+    }
+    
+    .task-btn.active .dot {
+      background: var(--accent);
+      box-shadow: 0 0 10px var(--accent-glow);
+    }
+    
+    .task-btn .name {
+      font-size: 13px;
+      flex: 1;
+    }
+    
+    /* Macro Section */
+    .macro-item {
+      padding: 14px;
+      background: rgba(0,0,0,0.2);
+      border-radius: 12px;
+      margin-bottom: 10px;
+    }
+    
+    .macro-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    
+    .macro-name {
+      font-size: 13px;
+      font-weight: 600;
+    }
+    
+    .macro-trigger {
+      font-size: 10px;
+      padding: 4px 8px;
+      background: rgba(245, 158, 11, 0.2);
+      color: var(--orange);
+      border-radius: 6px;
+    }
+    
+    .macro-flow {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+    
+    .macro-step {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 6px 10px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 6px;
+      font-size: 11px;
+      transition: all 0.3s;
+    }
+    
+    .macro-step.executing {
+      background: rgba(99, 102, 241, 0.3);
+      box-shadow: 0 0 10px var(--accent-glow);
+    }
+    
+    .macro-step.done {
+      background: rgba(34, 197, 94, 0.3);
+    }
+    
+    .macro-step .step-icon {
+      width: 16px;
+      height: 16px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 8px;
+    }
+    
+    .macro-arrow {
+      color: var(--text-dim);
+    }
+    
+    .run-macro-btn {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(135deg, var(--accent), var(--purple));
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    
+    .run-macro-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 20px var(--accent-glow);
+    }
+    
+    .run-macro-btn:active {
+      transform: translateY(0);
+    }
+    
+    .run-macro-btn.running {
+      background: linear-gradient(135deg, var(--orange), #d97706);
+      pointer-events: none;
+    }
+    
+    .run-macro-btn.completed {
+      background: linear-gradient(135deg, var(--green), #16a34a);
+    }
+    
+    /* Voice Section */
+    .voice-btn {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, var(--purple), var(--pink));
+      border: none;
+      border-radius: 12px;
+      color: white;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: all 0.2s;
+      margin-bottom: 12px;
+      user-select: none;
+    }
+    
+    .voice-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(168, 85, 247, 0.3);
+    }
+    
+    .voice-btn:active, .voice-btn.listening {
+      transform: translateY(0);
+      background: linear-gradient(135deg, var(--green), #059669);
+      box-shadow: 0 0 30px rgba(34, 197, 94, 0.5);
+    }
+    
+    .voice-btn.listening {
+      animation: voicePulse 1s infinite;
+    }
+    
+    @keyframes voicePulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
+      50% { box-shadow: 0 0 0 15px rgba(34, 197, 94, 0); }
+    }
+    
+    .voice-commands {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    
+    .voice-cmd {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px;
+      background: rgba(0,0,0,0.2);
+      border-radius: 8px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 1px solid transparent;
+    }
+    
+    .voice-cmd:hover {
+      background: rgba(255,255,255,0.05);
+      border-color: var(--pink);
+    }
+    
+    .voice-cmd:active {
+      background: rgba(236, 72, 153, 0.2);
+    }
+    
+    .voice-cmd .phrase {
+      color: var(--pink);
+      flex: 1;
+    }
+    
+    .voice-cmd .action {
+      color: var(--text-dim);
+      font-size: 11px;
+    }
+    
+    /* Activity Log */
+    .log-container {
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    
+    .log-container::-webkit-scrollbar {
+      width: 4px;
+    }
+    
+    .log-container::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    
+    .log-container::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 2px;
+    }
+    
+    .log-entry {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 10px;
+      background: rgba(0,0,0,0.2);
+      border-radius: 8px;
+      margin-bottom: 6px;
+      animation: slideIn 0.3s ease;
+    }
+    
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(-10px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    
+    .log-entry .time {
+      font-size: 10px;
+      color: var(--text-dim);
+      min-width: 50px;
+      font-family: monospace;
+    }
+    
+    .log-entry .icon {
+      font-size: 14px;
+    }
+    
+    .log-entry .text {
+      font-size: 12px;
+      color: var(--text-dim);
+      flex: 1;
+    }
+    
+    .log-entry .text strong {
+      color: var(--text);
+    }
+    
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--card);
+      border: 1px solid var(--border);
+      padding: 12px 20px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+      z-index: 1000;
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+    
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+    
+    .toast.success {
+      border-color: var(--green);
+      background: rgba(34, 197, 94, 0.15);
+    }
+    
+    /* Responsive */
+    @media (max-width: 1100px) {
+      .main {
+        grid-template-columns: 1fr;
+      }
+      
+      .hardware-section {
+        grid-template-columns: 1fr 1fr;
+      }
+      
+      .how-it-works {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    
+    @media (max-width: 600px) {
+      .hardware-section {
+        grid-template-columns: 1fr;
+      }
+      
+      .how-it-works {
+        grid-template-columns: 1fr;
+      }
+      
+      .app-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-content">
+      <div class="logo">
+        <div class="logo-icon">FS</div>
+        <div class="logo-text">
+          <h1>FlowState</h1>
+          <p>AI Workspace Controller</p>
+        </div>
+      </div>
+      <div class="header-status">
+        <div class="status-badge connected" id="aiStatus">
+          <span class="status-dot pulse"></span>
+          <span>AI Active</span>
+        </div>
+        <div class="status-badge connected" id="consoleStatus">
+          <span class="status-dot pulse"></span>
+          <span>🎛️ MX Console</span>
+        </div>
+        <div class="status-badge connected" id="ringStatus">
+          <span class="status-dot pulse"></span>
+          <span>⭕ Actions Ring</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="main">
+    <!-- Welcome Section -->
+    <div class="card welcome-section">
+      <div class="welcome-content">
+        <div class="welcome-icon">🧠</div>
+        <div class="welcome-text">
+          <h2>Welcome to FlowState</h2>
+          <p>Your MX Creative Console and Actions Ring adapt automatically to what you're doing. Select an app and task below to see the controls change in real-time.</p>
+          <div class="how-it-works">
+            <div class="how-step">
+              <div class="num">1</div>
+              <div class="title">Select App</div>
+              <div class="desc">Choose from 6 creative apps</div>
+            </div>
+            <div class="how-step">
+              <div class="num">2</div>
+              <div class="title">Choose Task</div>
+              <div class="desc">Pick your current workflow</div>
+            </div>
+            <div class="how-step">
+              <div class="num">3</div>
+              <div class="title">See Changes</div>
+              <div class="desc">Watch controls adapt live</div>
+            </div>
+            <div class="how-step">
+              <div class="num">4</div>
+              <div class="title">Try Features</div>
+              <div class="desc">Click buttons, run macros</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Left Column -->
+    <div class="left-column">
+      <!-- Current Context -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span>📍</span>
+            <span>Current Context</span>
+            <span class="card-badge">LIVE</span>
+          </div>
+        </div>
+        <div class="context-display">
+          <div class="context-app">
+            <div class="context-app-icon" id="ctxAppIcon" style="background: #9b59b6;">Pr</div>
+            <div class="context-app-info">
+              <h3 id="ctxAppName">Premiere Pro</h3>
+              <p id="ctxAppDesc">Video Editing Software</p>
+            </div>
+          </div>
+          <div class="context-arrow">→</div>
+          <div class="context-task" id="ctxTask">Color Grading</div>
+        </div>
+      </div>
+
+      <!-- Hardware Visualization -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span>🎮</span>
+            <span>Hardware Controls</span>
+          </div>
+          <div style="font-size: 11px; color: var(--text-dim);">Click any button to activate</div>
+        </div>
+        
+        <div class="hardware-section">
+          <!-- MX Console -->
+          <div class="console-visual">
+            <div class="device-status">
+              <span class="dot"></span>
+              <span>Connected</span>
+            </div>
+            <div class="console-label">MX Creative Console</div>
+            <div class="button-grid" id="buttonGrid"></div>
+            <div class="dial-row">
+              <div class="dial-container">
+                <div class="dial" id="dial1" style="--rotation: 0deg;"></div>
+                <div class="dial-value" id="dialVal1">0</div>
+                <div class="dial-label" id="dialLbl1">Exposure</div>
+              </div>
+              <div class="dial-container">
+                <div class="dial" id="dial2" style="--rotation: 45deg;"></div>
+                <div class="dial-value" id="dialVal2">+12</div>
+                <div class="dial-label" id="dialLbl2">Contrast</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Actions Ring -->
+          <div class="ring-visual">
+            <div class="device-status">
+              <span class="dot"></span>
+              <span>Connected</span>
+            </div>
+            <div class="console-label">Actions Ring</div>
+            <div class="ring-container">
+              <div class="ring-outer"></div>
+              <div id="ringSegments"></div>
+              <div class="ring-center">
+                <span class="mode-icon" id="ringIcon">🎨</span>
+                <span class="mode-text" id="ringText">Color</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI Insights -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span>🤖</span>
+            <span>AI Analysis</span>
+          </div>
+          <div style="font-size: 11px; color: var(--green);">● Analyzing workflow</div>
+        </div>
+        <div class="ai-insights" id="aiInsights"></div>
+      </div>
+
+      <!-- Activity Log -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span>📋</span>
+            <span>Activity Log</span>
+          </div>
+        </div>
+        <div class="log-container" id="logContainer"></div>
+      </div>
+    </div>
+
+    <!-- Right Column -->
+    <div class="right-column">
+      <!-- App Selector -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span>📱</span>
+            <span>Select Application</span>
+          </div>
+        </div>
+        <div class="app-grid" id="appGrid"></div>
+      </div>
+
+      <!-- Task Selector -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span>🎯</span>
+            <span>Select Task</span>
+          </div>
+        </div>
+        <div class="task-list" id="taskList"></div>
+      </div>
+
+      <!-- Macro Chain -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span>⚡</span>
+            <span>Cross-App Macro</span>
+          </div>
+        </div>
+        <div id="macroSection"></div>
+      </div>
+
+      <!-- Voice Control -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span>🎤</span>
+            <span>Voice Commands</span>
+          </div>
+        </div>
+        <button class="voice-btn" id="voiceBtn">
+          <span id="voiceIcon">🎙️</span>
+          <span id="voiceText">Click & Hold to Speak</span>
+        </button>
+        <div class="voice-commands" id="voiceCmds"></div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Toast Notification -->
+  <div class="toast" id="toast">
+    <span id="toastIcon">✅</span>
+    <span id="toastText">Action completed</span>
+  </div>
+
+  <script>
+    // ========================================
+    // APPLICATION DATA
+    // ========================================
+    const APPS = {
+      premiere: {
+        name: 'Premiere Pro',
+        icon: 'Pr',
+        color: '#9b59b6',
+        desc: 'Video Editing',
+        tasks: {
+          editing: {
+            name: 'Editing',
+            buttons: [
+              { icon: '⏮️', label: 'Start', color: '#9b59b6' },
+              { icon: '⏪', label: 'Back', color: '#9b59b6' },
+              { icon: '▶️', label: 'Play', color: '#3498db', active: true },
+              { icon: '⏩', label: 'Fwd', color: '#9b59b6' },
+              { icon: '⏭️', label: 'End', color: '#9b59b6' },
+              { icon: '✂️', label: 'Cut', color: '#e74c3c' },
+              { icon: '🔗', label: 'Link', color: '#2ecc71' },
+              { icon: '📌', label: 'Mark', color: '#f39c12' },
+              { icon: '↩️', label: 'Undo', color: '#95a5a6' },
+              { icon: '↪️', label: 'Redo', color: '#95a5a6' }
+            ],
+            ring: [
+              { icon: '🎬', color: '#9b59b6' },
+              { icon: '📋', color: '#3498db' },
+              { icon: '🗑️', color: '#e74c3c', active: true },
+              { icon: '🔊', color: '#2ecc71' },
+              { icon: '📝', color: '#f39c12' },
+              { icon: '🎞️', color: '#9b59b6' }
+            ],
+            dial1: { label: 'Zoom', value: '100%' },
+            dial2: { label: 'Jog', value: 'Scrub' },
+            ringMode: { icon: '✂️', text: 'Edit' }
+          },
+          colorGrading: {
+            name: 'Color Grading',
+            buttons: [
+              { icon: '☀️', label: 'Bright', color: '#f1c40f', active: true },
+              { icon: '🌙', label: 'Shadow', color: '#34495e' },
+              { icon: '🎨', label: 'Satur', color: '#e91e63' },
+              { icon: '🌡️', label: 'Temp', color: '#ff5722' },
+              { icon: '💜', label: 'Tint', color: '#9c27b0' },
+              { icon: '📊', label: 'Curve', color: '#00bcd4' },
+              { icon: '🎭', label: 'Mask', color: '#607d8b' },
+              { icon: '👁️', label: 'View', color: '#4caf50' },
+              { icon: '📤', label: 'Export', color: '#ff9800' },
+              { icon: '💾', label: 'Save', color: '#2196f3' }
+            ],
+            ring: [
+              { icon: '⬜', color: '#ecf0f1', active: true },
+              { icon: '⬛', color: '#2c3e50' },
+              { icon: '🔴', color: '#e74c3c' },
+              { icon: '🟢', color: '#27ae60' },
+              { icon: '🔵', color: '#3498db' },
+              { icon: '🟡', color: '#f1c40f' }
+            ],
+            dial1: { label: 'Exposure', value: '+0.5' },
+            dial2: { label: 'Contrast', value: '+12' },
+            ringMode: { icon: '🎨', text: 'Color' }
+          }
+        },
+        macro: { name: 'Export & Upload', trigger: 'Voice', steps: [
+          { app: 'Pr', action: 'Export', color: '#9b59b6' },
+          { app: 'YT', action: 'Upload', color: '#ff0000' },
+          { app: '💬', action: 'Notify', color: '#4a154b' }
+        ]},
+        voice: [
+          { phrase: '"Switch to color"', action: 'Lumetri Panel' },
+          { phrase: '"Export for web"', action: 'H.264 1080p' },
+          { phrase: '"Add transition"', action: 'Cross Dissolve' }
+        ]
+      },
+      vscode: {
+        name: 'VS Code',
+        icon: '{ }',
+        color: '#007acc',
+        desc: 'Code Editor',
+        tasks: {
+          writing: {
+            name: 'Writing Code',
+            buttons: [
+              { icon: '💾', label: 'Save', color: '#007acc', active: true },
+              { icon: '▶️', label: 'Run', color: '#4caf50' },
+              { icon: '🐛', label: 'Debug', color: '#ff5722' },
+              { icon: '🔍', label: 'Find', color: '#9c27b0' },
+              { icon: '📁', label: 'Files', color: '#607d8b' },
+              { icon: '🔀', label: 'Git', color: '#f05032' },
+              { icon: '📦', label: 'Term', color: '#1e1e1e' },
+              { icon: '🧩', label: 'Ext', color: '#00bcd4' },
+              { icon: '⚙️', label: 'Set', color: '#795548' },
+              { icon: '🎨', label: 'Theme', color: '#e91e63' }
+            ],
+            ring: [
+              { icon: '📄', color: '#007acc', active: true },
+              { icon: '📋', color: '#4caf50' },
+              { icon: '✂️', color: '#ff5722' },
+              { icon: '📌', color: '#9c27b0' },
+              { icon: '🔄', color: '#ff9800' },
+              { icon: '💡', color: '#ffc107' }
+            ],
+            dial1: { label: 'Scroll', value: 'Lines' },
+            dial2: { label: 'Zoom', value: '100%' },
+            ringMode: { icon: '✍️', text: 'Write' }
+          },
+          debugging: {
+            name: 'Debugging',
+            buttons: [
+              { icon: '▶️', label: 'Cont', color: '#4caf50', active: true },
+              { icon: '⏭️', label: 'Over', color: '#2196f3' },
+              { icon: '⬇️', label: 'Into', color: '#9c27b0' },
+              { icon: '⬆️', label: 'Out', color: '#ff5722' },
+              { icon: '⏹️', label: 'Stop', color: '#f44336' },
+              { icon: '🔄', label: 'Restart', color: '#ff9800' },
+              { icon: '📍', label: 'Break', color: '#e91e63' },
+              { icon: '👁️', label: 'Watch', color: '#00bcd4' },
+              { icon: '📊', label: 'Stack', color: '#607d8b' },
+              { icon: '🔧', label: 'Console', color: '#795548' }
+            ],
+            ring: [
+              { icon: '⏯️', color: '#ff9800' },
+              { icon: '🔴', color: '#f44336', active: true },
+              { icon: '👁️', color: '#2196f3' },
+              { icon: '📝', color: '#4caf50' },
+              { icon: '🔍', color: '#9c27b0' },
+              { icon: '📊', color: '#ff5722' }
+            ],
+            dial1: { label: 'Breakpt', value: '#3' },
+            dial2: { label: 'Step', value: 'Line' },
+            ringMode: { icon: '🐛', text: 'Debug' }
+          }
+        },
+        macro: { name: 'Build & Deploy', trigger: 'Dial Press', steps: [
+          { app: 'VS', action: 'Build', color: '#007acc' },
+          { app: '🐳', action: 'Push', color: '#2496ed' },
+          { app: '☸️', action: 'Deploy', color: '#326ce5' }
+        ]},
+        voice: [
+          { phrase: '"Run tests"', action: 'npm test' },
+          { phrase: '"Open terminal"', action: 'Toggle Panel' },
+          { phrase: '"Format code"', action: 'Prettier' }
+        ]
+      },
+      blender: {
+        name: 'Blender',
+        icon: '🎨',
+        color: '#ea7600',
+        desc: '3D Creation',
+        tasks: {
+          modeling: {
+            name: 'Modeling',
+            buttons: [
+              { icon: '🔲', label: 'Vertex', color: '#ea7600', active: true },
+              { icon: '📐', label: 'Edge', color: '#ea7600' },
+              { icon: '🔷', label: 'Face', color: '#ea7600' },
+              { icon: '📦', label: 'Object', color: '#3498db' },
+              { icon: '🔄', label: 'Mirror', color: '#9b59b6' },
+              { icon: '⬆️', label: 'Extrude', color: '#2ecc71' },
+              { icon: '🔗', label: 'Bevel', color: '#f39c12' },
+              { icon: '🌀', label: 'Subdiv', color: '#e74c3c' },
+              { icon: '👁️', label: 'X-Ray', color: '#1abc9c' },
+              { icon: '📸', label: 'Render', color: '#34495e' }
+            ],
+            ring: [
+              { icon: '🔲', color: '#ea7600' },
+              { icon: '⭕', color: '#3498db', active: true },
+              { icon: '🔺', color: '#e74c3c' },
+              { icon: '⬜', color: '#2ecc71' },
+              { icon: '🍩', color: '#9b59b6' },
+              { icon: '🐵', color: '#f39c12' }
+            ],
+            dial1: { label: 'Scale', value: '1.0x' },
+            dial2: { label: 'Rotate', value: '0°' },
+            ringMode: { icon: '📦', text: 'Model' }
+          },
+          sculpting: {
+            name: 'Sculpting',
+            buttons: [
+              { icon: '🖌️', label: 'Draw', color: '#ea7600', active: true },
+              { icon: '🔨', label: 'Clay', color: '#8d6e63' },
+              { icon: '✨', label: 'Smooth', color: '#4caf50' },
+              { icon: '📌', label: 'Pinch', color: '#e91e63' },
+              { icon: '💨', label: 'Inflate', color: '#00bcd4' },
+              { icon: '🔲', label: 'Flatten', color: '#9c27b0' },
+              { icon: '🎭', label: 'Mask', color: '#607d8b' },
+              { icon: '🔄', label: 'Symm', color: '#ff9800' },
+              { icon: '📊', label: 'Multires', color: '#795548' },
+              { icon: '💾', label: 'Save', color: '#2196f3' }
+            ],
+            ring: [
+              { icon: '🖌️', color: '#ea7600', active: true },
+              { icon: '🔨', color: '#f44336' },
+              { icon: '🌊', color: '#2196f3' },
+              { icon: '✨', color: '#4caf50' },
+              { icon: '🔲', color: '#ff9800' },
+              { icon: '🎯', color: '#9c27b0' }
+            ],
+            dial1: { label: 'Radius', value: '50px' },
+            dial2: { label: 'Strength', value: '0.8' },
+            ringMode: { icon: '🖌️', text: 'Sculpt' }
+          }
+        },
+        macro: { name: 'Export to Unity', trigger: 'Button 10', steps: [
+          { app: '🎨', action: 'Render', color: '#ea7600' },
+          { app: '📤', action: 'FBX', color: '#607d8b' },
+          { app: '🎮', action: 'Import', color: '#000000' }
+        ]},
+        voice: [
+          { phrase: '"Add cube"', action: 'Shift+A → Cube' },
+          { phrase: '"Edit mode"', action: 'Tab' },
+          { phrase: '"Render view"', action: 'F12' }
+        ]
+      },
+      photoshop: {
+        name: 'Photoshop',
+        icon: 'Ps',
+        color: '#31a8ff',
+        desc: 'Image Editing',
+        tasks: {
+          retouching: {
+            name: 'Retouching',
+            buttons: [
+              { icon: '🖌️', label: 'Brush', color: '#31a8ff', active: true },
+              { icon: '🩹', label: 'Heal', color: '#4caf50' },
+              { icon: '🎯', label: 'Clone', color: '#ff9800' },
+              { icon: '💧', label: 'Blur', color: '#9c27b0' },
+              { icon: '✨', label: 'Sharp', color: '#e91e63' },
+              { icon: '🔥', label: 'Dodge', color: '#ffeb3b' },
+              { icon: '🌑', label: 'Burn', color: '#795548' },
+              { icon: '🎭', label: 'Mask', color: '#607d8b' },
+              { icon: '📐', label: 'Crop', color: '#00bcd4' },
+              { icon: '💾', label: 'Save', color: '#2196f3' }
+            ],
+            ring: [
+              { icon: '🖌️', color: '#31a8ff', active: true },
+              { icon: '✏️', color: '#f44336' },
+              { icon: '🌀', color: '#9c27b0' },
+              { icon: '🩹', color: '#4caf50' },
+              { icon: '👁️', color: '#e74c3c' },
+              { icon: '🎯', color: '#ff9800' }
+            ],
+            dial1: { label: 'Size', value: '45px' },
+            dial2: { label: 'Opacity', value: '85%' },
+            ringMode: { icon: '🩹', text: 'Retouch' }
+          },
+          compositing: {
+            name: 'Compositing',
+            buttons: [
+              { icon: '📐', label: 'Select', color: '#31a8ff', active: true },
+              { icon: '✂️', label: 'Cut', color: '#f44336' },
+              { icon: '📋', label: 'Paste', color: '#4caf50' },
+              { icon: '🔀', label: 'Trans', color: '#ff9800' },
+              { icon: '🎭', label: 'Mask', color: '#9c27b0' },
+              { icon: '📊', label: 'Layer', color: '#607d8b' },
+              { icon: '🎨', label: 'Blend', color: '#e91e63' },
+              { icon: '⚡', label: 'Filter', color: '#00bcd4' },
+              { icon: '🔧', label: 'Adjust', color: '#795548' },
+              { icon: '💾', label: 'Export', color: '#2196f3' }
+            ],
+            ring: [
+              { icon: '⬜', color: '#31a8ff', active: true },
+              { icon: '⭕', color: '#f44336' },
+              { icon: '🪄', color: '#9c27b0' },
+              { icon: '✏️', color: '#4caf50' },
+              { icon: '🎯', color: '#ff9800' },
+              { icon: '👤', color: '#e91e63' }
+            ],
+            dial1: { label: 'Feather', value: '5px' },
+            dial2: { label: 'Layer', value: '#12' },
+            ringMode: { icon: '📐', text: 'Select' }
+          }
+        },
+        macro: { name: 'Batch Export', trigger: 'Voice', steps: [
+          { app: 'Ps', action: 'Flatten', color: '#31a8ff' },
+          { app: 'Ps', action: 'Resize', color: '#31a8ff' },
+          { app: '📤', action: 'Export', color: '#607d8b' }
+        ]},
+        voice: [
+          { phrase: '"Select all"', action: 'Cmd+A' },
+          { phrase: '"Merge layers"', action: 'Cmd+E' },
+          { phrase: '"Quick export"', action: 'PNG @ 2x' }
+        ]
+      },
+      figma: {
+        name: 'Figma',
+        icon: 'F',
+        color: '#f24e1e',
+        desc: 'UI Design',
+        tasks: {
+          designing: {
+            name: 'UI Design',
+            buttons: [
+              { icon: '⬜', label: 'Frame', color: '#f24e1e', active: true },
+              { icon: '🔲', label: 'Rect', color: '#a259ff' },
+              { icon: '⭕', label: 'Circle', color: '#1abcfe' },
+              { icon: '✏️', label: 'Pen', color: '#0acf83' },
+              { icon: 'T', label: 'Text', color: '#ff7262' },
+              { icon: '🖼️', label: 'Image', color: '#607d8b' },
+              { icon: '🧩', label: 'Comp', color: '#9c27b0' },
+              { icon: '🎨', label: 'Style', color: '#e91e63' },
+              { icon: '📐', label: 'Layout', color: '#00bcd4' },
+              { icon: '📤', label: 'Export', color: '#795548' }
+            ],
+            ring: [
+              { icon: '⬜', color: '#f24e1e', active: true },
+              { icon: '🔲', color: '#a259ff' },
+              { icon: 'T', color: '#ff7262' },
+              { icon: '✏️', color: '#0acf83' },
+              { icon: '🧩', color: '#1abcfe' },
+              { icon: '💬', color: '#f1c40f' }
+            ],
+            dial1: { label: 'Zoom', value: '100%' },
+            dial2: { label: 'Corner', value: '8px' },
+            ringMode: { icon: '🎨', text: 'Design' }
+          },
+          prototyping: {
+            name: 'Prototyping',
+            buttons: [
+              { icon: '🔗', label: 'Link', color: '#1abcfe', active: true },
+              { icon: '▶️', label: 'Play', color: '#0acf83' },
+              { icon: '⚡', label: 'Anim', color: '#f24e1e' },
+              { icon: '📱', label: 'Device', color: '#a259ff' },
+              { icon: '🖱️', label: 'Click', color: '#ff7262' },
+              { icon: '👆', label: 'Hover', color: '#607d8b' },
+              { icon: '↔️', label: 'Drag', color: '#9c27b0' },
+              { icon: '⏱️', label: 'Delay', color: '#e91e63' },
+              { icon: '🔄', label: 'Loop', color: '#00bcd4' },
+              { icon: '📤', label: 'Share', color: '#795548' }
+            ],
+            ring: [
+              { icon: '🔗', color: '#1abcfe', active: true },
+              { icon: '⚡', color: '#f24e1e' },
+              { icon: '📱', color: '#0acf83' },
+              { icon: '🔄', color: '#a259ff' },
+              { icon: '📊', color: '#ff7262' },
+              { icon: '💬', color: '#f1c40f' }
+            ],
+            dial1: { label: 'Duration', value: '300ms' },
+            dial2: { label: 'Ease', value: 'Out' },
+            ringMode: { icon: '▶️', text: 'Proto' }
+          }
+        },
+        macro: { name: 'Dev Handoff', trigger: 'Voice', steps: [
+          { app: 'F', action: 'Export', color: '#f24e1e' },
+          { app: 'Z', action: 'Sync', color: '#fdbd39' },
+          { app: '💬', action: 'Share', color: '#4a154b' }
+        ]},
+        voice: [
+          { phrase: '"Create frame"', action: 'F' },
+          { phrase: '"Auto layout"', action: 'Shift+A' },
+          { phrase: '"Present"', action: 'Cmd+Opt+Enter' }
+        ]
+      },
+      aftereffects: {
+        name: 'After Effects',
+        icon: 'Ae',
+        color: '#9999ff',
+        desc: 'Motion Graphics',
+        tasks: {
+          animating: {
+            name: 'Animation',
+            buttons: [
+              { icon: '⏯️', label: 'Play', color: '#9999ff', active: true },
+              { icon: '🔑', label: 'Key', color: '#f1c40f' },
+              { icon: '📊', label: 'Graph', color: '#2ecc71' },
+              { icon: '🎭', label: 'Mask', color: '#e74c3c' },
+              { icon: '🌀', label: 'Effect', color: '#9b59b6' },
+              { icon: '📐', label: 'Trans', color: '#3498db' },
+              { icon: '👁️', label: 'Preview', color: '#1abc9c' },
+              { icon: '📦', label: 'Precomp', color: '#e67e22' },
+              { icon: '⏱️', label: 'Time', color: '#95a5a6' },
+              { icon: '📤', label: 'Render', color: '#34495e' }
+            ],
+            ring: [
+              { icon: '📍', color: '#e74c3c', active: true },
+              { icon: '📏', color: '#3498db' },
+              { icon: '🔄', color: '#9b59b6' },
+              { icon: '👁️', color: '#2ecc71' },
+              { icon: '⚓', color: '#f1c40f' },
+              { icon: '🔗', color: '#e67e22' }
+            ],
+            dial1: { label: 'Time', value: '2:15' },
+            dial2: { label: 'Zoom', value: 'Fit' },
+            ringMode: { icon: '🎬', text: 'Animate' }
+          },
+          compositing: {
+            name: 'VFX',
+            buttons: [
+              { icon: '🎭', label: 'Mask', color: '#9999ff', active: true },
+              { icon: '🔑', label: 'Key', color: '#2ecc71' },
+              { icon: '🌈', label: 'Color', color: '#e91e63' },
+              { icon: '🔥', label: 'Glow', color: '#ff9800' },
+              { icon: '💨', label: 'Blur', color: '#00bcd4' },
+              { icon: '📊', label: 'Track', color: '#9c27b0' },
+              { icon: '🎯', label: 'Roto', color: '#607d8b' },
+              { icon: '🌀', label: 'Warp', color: '#795548' },
+              { icon: '👁️', label: 'Preview', color: '#4caf50' },
+              { icon: '📤', label: 'Render', color: '#2196f3' }
+            ],
+            ring: [
+              { icon: '🎭', color: '#9999ff', active: true },
+              { icon: '🔑', color: '#2ecc71' },
+              { icon: '📊', color: '#ff9800' },
+              { icon: '🌀', color: '#e91e63' },
+              { icon: '💨', color: '#00bcd4' },
+              { icon: '🔥', color: '#f44336' }
+            ],
+            dial1: { label: 'Feather', value: '12px' },
+            dial2: { label: 'Expand', value: '+2' },
+            ringMode: { icon: '🎭', text: 'VFX' }
+          }
+        },
+        macro: { name: 'Render Queue', trigger: 'Dial Press', steps: [
+          { app: 'Ae', action: 'Queue', color: '#9999ff' },
+          { app: 'Ae', action: 'Render', color: '#9999ff' },
+          { app: '📁', action: 'Open', color: '#4a90d9' }
+        ]},
+        voice: [
+          { phrase: '"Add keyframe"', action: 'Opt+Shift+P' },
+          { phrase: '"RAM preview"', action: 'Space' },
+          { phrase: '"Pre-compose"', action: 'Cmd+Shift+C' }
+        ]
+      }
+    };
+
+    // ========================================
+    // STATE
+    // ========================================
+    let currentApp = 'premiere';
+    let currentTask = 'colorGrading';
+    let logs = [];
+    let isVoiceActive = false;
+    let isMacroRunning = false;
+
+    // ========================================
+    // DOM ELEMENTS
+    // ========================================
+    const $ = id => document.getElementById(id);
+    const buttonGrid = $('buttonGrid');
+    const ringSegments = $('ringSegments');
+    const appGrid = $('appGrid');
+    const taskList = $('taskList');
+    const macroSection = $('macroSection');
+    const voiceCmds = $('voiceCmds');
+    const aiInsights = $('aiInsights');
+    const logContainer = $('logContainer');
+    const voiceBtn = $('voiceBtn');
+    const toast = $('toast');
+
+    // ========================================
+    // UTILITY FUNCTIONS
+    // ========================================
+    function showToast(icon, text, type = '') {
+      $('toastIcon').textContent = icon;
+      $('toastText').textContent = text;
+      toast.className = 'toast ' + type;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+
+    function addLog(icon, message) {
+      const time = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      logs.unshift({ time, icon, message });
+      if (logs.length > 20) logs.pop();
+      renderLogs();
+    }
+
+    function renderLogs() {
+      logContainer.innerHTML = logs.map(log => `
+        <div class="log-entry">
+          <span class="time">${log.time}</span>
+          <span class="icon">${log.icon}</span>
+          <span class="text">${log.message}</span>
+        </div>
+      `).join('');
+    }
+
+    // ========================================
+    // RENDER FUNCTIONS
+    // ========================================
+    function render() {
+      const app = APPS[currentApp];
+      const task = app.tasks[currentTask];
+      
+      // Update context display
+      $('ctxAppIcon').style.background = app.color;
+      $('ctxAppIcon').textContent = app.icon;
+      $('ctxAppName').textContent = app.name;
+      $('ctxAppDesc').textContent = app.desc;
+      $('ctxTask').textContent = task.name;
+      
+      // Render buttons
+      renderButtons(task.buttons);
+      
+      // Render ring segments
+      renderRing(task.ring);
+      
+      // Update dials
+      $('dialLbl1').textContent = task.dial1.label;
+      $('dialVal1').textContent = task.dial1.value;
+      $('dialLbl2').textContent = task.dial2.label;
+      $('dialVal2').textContent = task.dial2.value;
+      
+      // Update ring center
+      $('ringIcon').textContent = task.ringMode.icon;
+      $('ringText').textContent = task.ringMode.text;
+      
+      // Render app grid
+      renderApps();
+      
+      // Render task list
+      renderTasks();
+      
+      // Render macro
+      renderMacro();
+      
+      // Render voice commands
+      renderVoiceCommands();
+      
+      // Render AI insights
+      renderAIInsights();
+    }
+
+    function renderButtons(buttons) {
+      buttonGrid.innerHTML = buttons.map((btn, i) => `
+        <div class="hw-button ${btn.active ? 'active' : ''}" 
+             style="--btn-color: ${btn.color}; --btn-glow: ${btn.color}40;"
+             data-index="${i}">
+          <span class="icon">${btn.icon}</span>
+          <span class="label">${btn.label}</span>
+        </div>
+      `).join('');
+      
+      // Add click handlers
+      buttonGrid.querySelectorAll('.hw-button').forEach((btn, i) => {
+        btn.addEventListener('click', function() {
+          buttonGrid.querySelectorAll('.hw-button').forEach(b => b.classList.remove('active'));
+          this.classList.add('active');
+          const label = buttons[i].label;
+          addLog('🔘', `Activated <strong>${label}</strong> button`);
+          showToast('🔘', `${label} activated`, 'success');
+        });
+      });
+    }
+
+    function renderRing(ring) {
+      ringSegments.innerHTML = ring.map((seg, i) => `
+        <div class="ring-segment ${seg.active ? 'active' : ''}"
+             style="--seg-color: ${seg.color}; --seg-glow: ${seg.color}40;"
+             data-index="${i}">
+          ${seg.icon}
+        </div>
+      `).join('');
+      
+      // Add click handlers
+      ringSegments.querySelectorAll('.ring-segment').forEach((seg, i) => {
+        seg.addEventListener('click', function() {
+          ringSegments.querySelectorAll('.ring-segment').forEach(s => s.classList.remove('active'));
+          this.classList.add('active');
+          addLog('⭕', `Selected ring segment <strong>${ring[i].icon}</strong>`);
+          showToast('⭕', `Ring segment selected`, 'success');
+        });
+      });
+    }
+
+    function renderApps() {
+      appGrid.innerHTML = Object.entries(APPS).map(([key, a]) => `
+        <div class="app-btn ${key === currentApp ? 'active' : ''}"
+             style="--app-color: ${a.color}; --app-bg: ${a.color}15;"
+             data-app="${key}">
+          <div class="icon" style="background: ${a.color};">${a.icon}</div>
+          <span class="name">${a.name}</span>
+        </div>
+      `).join('');
+
+      appGrid.querySelectorAll('.app-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const appKey = this.dataset.app;
+          if (appKey !== currentApp) {
+            const oldApp = APPS[currentApp].name;
+            currentApp = appKey;
+            currentTask = Object.keys(APPS[appKey].tasks)[0];
+            addLog('📱', `Switched from <strong>${oldApp}</strong> to <strong>${APPS[appKey].name}</strong>`);
+            showToast('📱', `Switched to ${APPS[appKey].name}`, 'success');
+            render();
+          }
+        });
+      });
+    }
+
+    function renderTasks() {
+      const app = APPS[currentApp];
+      const tasks = Object.entries(app.tasks);
+      
+      taskList.innerHTML = tasks.map(([key, t]) => `
+        <div class="task-btn ${key === currentTask ? 'active' : ''}" data-task="${key}">
+          <span class="dot"></span>
+          <span class="name">${t.name}</span>
+        </div>
+      `).join('');
+
+      taskList.querySelectorAll('.task-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const taskKey = this.dataset.task;
+          if (taskKey !== currentTask) {
+            const oldTask = app.tasks[currentTask].name;
+            currentTask = taskKey;
+            addLog('🎯', `Changed context: <strong>${oldTask}</strong> → <strong>${app.tasks[taskKey].name}</strong>`);
+            showToast('🎯', `Context: ${app.tasks[taskKey].name}`, 'success');
+            render();
+          }
+        });
+      });
+    }
+
+    function renderMacro() {
+      const app = APPS[currentApp];
+      const macro = app.macro;
+      
+      macroSection.innerHTML = `
+        <div class="macro-item">
+          <div class="macro-header">
+            <span class="macro-name">${macro.name}</span>
+            <span class="macro-trigger">${macro.trigger}</span>
+          </div>
+          <div class="macro-flow" id="macroFlow">
+            ${macro.steps.map((step, i) => `
+              <div class="macro-step" id="macroStep${i}">
+                <span class="step-icon" style="background: ${step.color};">${step.app}</span>
+                <span>${step.action}</span>
+              </div>
+              ${i < macro.steps.length - 1 ? '<span class="macro-arrow">→</span>' : ''}
+            `).join('')}
+          </div>
+          <button class="run-macro-btn" id="runMacroBtn">
+            <span>▶</span>
+            <span>Run Macro</span>
+          </button>
+        </div>
+      `;
+
+      // Add macro button click handler
+      $('runMacroBtn').addEventListener('click', runMacro);
+    }
+
+    function runMacro() {
+      if (isMacroRunning) return;
+      
+      isMacroRunning = true;
+      const app = APPS[currentApp];
+      const macro = app.macro;
+      const btn = $('runMacroBtn');
+      
+      // Update button state
+      btn.classList.add('running');
+      btn.innerHTML = '<span>⏳</span><span>Running...</span>';
+      
+      addLog('⚡', `Starting macro: <strong>${macro.name}</strong>`);
+      showToast('⚡', `Running ${macro.name}...`);
+      
+      // Execute each step with visual feedback
+      macro.steps.forEach((step, i) => {
+        setTimeout(() => {
+          // Highlight current step
+          const stepEl = $(`macroStep${i}`);
+          if (stepEl) {
+            stepEl.classList.add('executing');
+            addLog('🔄', `Executing: <strong>${step.app} → ${step.action}</strong>`);
+          }
+          
+          // Mark as done after a moment
+          setTimeout(() => {
+            if (stepEl) {
+              stepEl.classList.remove('executing');
+              stepEl.classList.add('done');
+            }
+          }, 600);
+          
+        }, i * 1000);
+      });
+      
+      // Complete macro
+      setTimeout(() => {
+        btn.classList.remove('running');
+        btn.classList.add('completed');
+        btn.innerHTML = '<span>✅</span><span>Completed!</span>';
+        addLog('✅', `Macro <strong>${macro.name}</strong> completed successfully!`);
+        showToast('✅', `${macro.name} completed!`, 'success');
+        
+        // Reset after a moment
+        setTimeout(() => {
+          btn.classList.remove('completed');
+          btn.innerHTML = '<span>▶</span><span>Run Macro</span>';
+          document.querySelectorAll('.macro-step').forEach(s => s.classList.remove('done'));
+          isMacroRunning = false;
+        }, 2000);
+        
+      }, macro.steps.length * 1000 + 500);
+    }
+
+    function renderVoiceCommands() {
+      const app = APPS[currentApp];
+      
+      voiceCmds.innerHTML = app.voice.map((cmd, i) => `
+        <div class="voice-cmd" data-index="${i}">
+          <span class="phrase">${cmd.phrase}</span>
+          <span class="action">→ ${cmd.action}</span>
+        </div>
+      `).join('');
+
+      voiceCmds.querySelectorAll('.voice-cmd').forEach((el, i) => {
+        el.addEventListener('click', function() {
+          const cmd = app.voice[i];
+          addLog('🎤', `Voice command: <strong>${cmd.phrase}</strong> → ${cmd.action}`);
+          showToast('🎤', `${cmd.action}`, 'success');
+        });
+      });
+    }
+
+    function renderAIInsights() {
+      const insights = [
+        {
+          label: 'Detected Activity',
+          value: getActivity(),
+          color: 'var(--purple)'
+        },
+        {
+          label: 'Next Prediction',
+          value: getPrediction(),
+          meta: `${75 + Math.floor(Math.random() * 20)}% confidence`,
+          color: 'var(--green)'
+        },
+        {
+          label: 'Suggested Action',
+          value: getSuggestion(),
+          color: 'var(--orange)'
+        }
+      ];
+      
+      aiInsights.innerHTML = insights.map(i => `
+        <div class="insight" style="--insight-color: ${i.color};">
+          <div class="insight-label">${i.label}</div>
+          <div class="insight-value">${i.value}</div>
+          ${i.meta ? `<div class="insight-meta">📊 ${i.meta}</div>` : ''}
+        </div>
+      `).join('');
+    }
+
+    function getActivity() {
+      const activities = {
+        premiere: { editing: 'Trimming clips on "Main_Edit_v3"', colorGrading: 'Color correcting "Interview_03.mp4"' },
+        vscode: { writing: 'Editing "Dashboard.tsx" (142 lines)', debugging: 'Debugging breakpoint at line 89' },
+        blender: { modeling: 'Box modeling "Character_v2.blend"', sculpting: 'Sculpting facial details' },
+        photoshop: { retouching: 'Portrait retouching session', compositing: 'Layer compositing (12 layers)' },
+        figma: { designing: 'Creating "Button/Primary" component', prototyping: 'Building onboarding flow' },
+        aftereffects: { animating: 'Keyframing logo animation', compositing: 'Green screen keying' }
+      };
+      return activities[currentApp]?.[currentTask] || 'Analyzing...';
+    }
+
+    function getPrediction() {
+      const predictions = {
+        premiere: { editing: 'Add transition after next cut', colorGrading: 'Export after 2 more clips' },
+        vscode: { writing: 'Run tests after saving', debugging: 'Step into function next' },
+        blender: { modeling: 'Apply subdivision modifier', sculpting: 'Switch to smooth brush' },
+        photoshop: { retouching: 'Apply frequency separation', compositing: 'Merge visible layers' },
+        figma: { designing: 'Create component variant', prototyping: 'Add smart animate' },
+        aftereffects: { animating: 'Add ease to keyframes', compositing: 'Pre-compose layers' }
+      };
+      return predictions[currentApp]?.[currentTask] || 'Learning workflow...';
+    }
+
+    function getSuggestion() {
+      const suggestions = {
+        premiere: { editing: 'Map "Razor Tool" to Button 6', colorGrading: 'Enable "Quick Export" on Button 9' },
+        vscode: { writing: 'Assign "Terminal" to Ring', debugging: 'Map "Continue" to dial press' },
+        blender: { modeling: 'Enable "Mirror" on Button 5', sculpting: 'Map "Smooth" to dial rotation' },
+        photoshop: { retouching: 'Assign "Healing Brush" to Ring', compositing: 'Map "Layer Opacity" to dial' },
+        figma: { designing: 'Enable "Auto Layout" on Ring', prototyping: 'Map "Present" to dial press' },
+        aftereffects: { animating: 'Assign "Graph Editor" to Button 3', compositing: 'Enable "RAM Preview" on Ring' }
+      };
+      return suggestions[currentApp]?.[currentTask] || 'Learning your workflow...';
+    }
+
+    // ========================================
+    // DIAL INTERACTION
+    // ========================================
+    function setupDials() {
+      setupDial($('dial1'), 'dialVal1', 'dialLbl1');
+      setupDial($('dial2'), 'dialVal2', 'dialLbl2');
+    }
+
+    function setupDial(dial, valueId, labelId) {
+      let rotation = 0;
+      let isDragging = false;
+      let startAngle = 0;
+      let startRotation = 0;
+
+      function getAngle(e, rect) {
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        return Math.atan2(clientY - centerY, clientX - centerX);
+      }
+
+      function onStart(e) {
+        e.preventDefault();
+        isDragging = true;
+        const rect = dial.getBoundingClientRect();
+        startAngle = getAngle(e, rect);
+        startRotation = rotation;
+      }
+
+      function onMove(e) {
+        if (!isDragging) return;
+        const rect = dial.getBoundingClientRect();
+        const currentAngle = getAngle(e, rect);
+        const deltaAngle = (currentAngle - startAngle) * (180 / Math.PI);
+        rotation = startRotation + deltaAngle;
+        dial.style.setProperty('--rotation', `${rotation}deg`);
+      }
+
+      function onEnd() {
+        if (isDragging) {
+          isDragging = false;
+          const label = $(labelId).textContent;
+          addLog('🎛️', `Adjusted <strong>${label}</strong> dial`);
+          showToast('🎛️', `${label} adjusted`, 'success');
+        }
+      }
+
+      dial.addEventListener('mousedown', onStart);
+      dial.addEventListener('touchstart', onStart, { passive: false });
+      document.addEventListener('mousemove', onMove);
+      document.addEventListener('touchmove', onMove, { passive: false });
+      document.addEventListener('mouseup', onEnd);
+      document.addEventListener('touchend', onEnd);
+    }
+
+    // ========================================
+    // VOICE INTERACTION
+    // ========================================
+    function setupVoice() {
+      function startListening(e) {
+        e.preventDefault();
+        if (isVoiceActive) return;
+        
+        isVoiceActive = true;
+        voiceBtn.classList.add('listening');
+        $('voiceIcon').textContent = '🎙️';
+        $('voiceText').textContent = 'Listening...';
+        addLog('🎤', 'Voice listening started...');
+      }
+
+      function stopListening(e) {
+        e.preventDefault();
+        if (!isVoiceActive) return;
+        
+        isVoiceActive = false;
+        voiceBtn.classList.remove('listening');
+        $('voiceIcon').textContent = '🎙️';
+        $('voiceText').textContent = 'Click & Hold to Speak';
+        
+        // Simulate voice recognition
+        const app = APPS[currentApp];
+        const cmd = app.voice[Math.floor(Math.random() * app.voice.length)];
+        
+        setTimeout(() => {
+          addLog('✅', `Recognized: <strong>${cmd.phrase}</strong> → ${cmd.action}`);
+          showToast('🎤', `${cmd.action}`, 'success');
+        }, 500);
+      }
+
+      // Mouse events
+      voiceBtn.addEventListener('mousedown', startListening);
+      voiceBtn.addEventListener('mouseup', stopListening);
+      voiceBtn.addEventListener('mouseleave', function(e) {
+        if (isVoiceActive) stopListening(e);
+      });
+
+      // Touch events
+      voiceBtn.addEventListener('touchstart', startListening, { passive: false });
+      voiceBtn.addEventListener('touchend', stopListening, { passive: false });
+    }
+
+    // ========================================
+    // INITIALIZE
+    // ========================================
+    function init() {
+      // Render initial UI
+      render();
+      
+      // Setup interactions
+      setupDials();
+      setupVoice();
+      
+      // Initial logs
+      addLog('🧠', 'FlowState AI initialized');
+      addLog('🎛️', 'MX Creative Console connected');
+      addLog('⭕', 'Actions Ring connected');
+      addLog('📱', `Connected to <strong>${APPS[currentApp].name}</strong>`);
+      addLog('🎯', `Context: <strong>${APPS[currentApp].tasks[currentTask].name}</strong>`);
+      
+      // Show welcome toast
+      setTimeout(() => showToast('👋', 'Welcome to FlowState!', 'success'), 500);
+      
+      // Update AI insights periodically
+      setInterval(renderAIInsights, 10000);
+    }
+
+    // Start the app
+    init();
+  </script>
+</body>
+</html>
