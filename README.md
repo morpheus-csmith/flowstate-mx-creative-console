@@ -93,10 +93,14 @@ MIT License — see [LICENSE](LICENSE) for details.
 
 ---
 
-## 👤 Author ** Chris Smith**
+## 👤 Author
+
+**Chris Smith**
 
 - GitHub: [@morpheus-csmith](https://github.com/morpheus-csmith)
+
 ---
+
 <p align="center">
   <img src="assets/thumbnail.png" alt="FlowState Thumbnail" width="600">
 </p>
