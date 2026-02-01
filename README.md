@@ -85,57 +85,7 @@ flowstate-mx-creative-console/
 │   └── thumbnail.png       # Submission thumbnail
 └── docs/
     └── submission.md       # Full submission document
-```
 
----
-
-## 🎬 Video Pitch Script (60 seconds)
-
-**[0:00-0:08] HOOK**
-> "What if your MX Creative Console could read your mind? Not literally — but close. Watch what happens when I switch from editing to color grading."
-
-**[0:08-0:20] THE PROBLEM**
-> "Current plugins are static. One profile per app. But creative work isn't static — you're constantly switching between editing, color grading, audio mixing, effects. Each switch breaks your flow."
-
-**[0:20-0:35] THE SOLUTION**
-> "FlowState uses AI to detect what you're actually doing — not just which app is open. Open the Lumetri panel? Boom — exposure, contrast, and color wheels appear. Start debugging code? Your console becomes a debugger control surface."
-
-**[0:35-0:48] KEY FEATURES**
-> "It learns your patterns and predicts what you'll need next. Voice commands let you switch modes hands-free. And cross-app macros chain actions across multiple applications with one button."
-
-**[0:48-0:60] CLOSE**
-> "FlowState: context-aware control that adapts to you. Built for the MX Creative Console. Built for how creatives actually work."
-
----
-
-## 🏆 Addressing Judging Criteria
-
-### 🎯 Innovation & Creativity
-- First context-within-context detection for hardware controllers
-- Predictive workflow learning using on-device ML
-- Novel cross-app macro chains
-
-### ⚙️ Technical Excellence
-- Privacy-first architecture (all ML runs locally)
-- <50ms context detection latency
-- Extensible plugin system for community contributions
-
-### ✨ User Experience
-- Zero configuration required
-- Visual feedback shows AI decisions
-- Graceful learning curve
-
-### 💼 Real-World Impact
-- Addresses universal pain point for creative professionals
-- Measurable 3+ hours saved weekly
-- Reduces cognitive load significantly
-
-### 🔧 Feasibility
-- Solo-developer achievable using existing APIs
-- No proprietary dependencies
-- Working prototype demonstrates full concept
-
----
 
 ## 📄 License
 
@@ -143,14 +93,10 @@ MIT License — see [LICENSE](LICENSE) for details.
 
 ---
 
-## 👤 Author
-
-**Logitech DevStudio 2026 Submission**
+## 👤 Author ** Chris Smith**
 
 - GitHub: [@morpheus-csmith](https://github.com/morpheus-csmith)
-
 ---
-
 <p align="center">
   <img src="assets/thumbnail.png" alt="FlowState Thumbnail" width="600">
 </p>
